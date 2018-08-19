@@ -5,7 +5,6 @@ from glob import glob
 import os
 
 import image_utils as im
-import numpy as np
 import utils
 import tensorflow as tf
 from tensorflow.python.platform import gfile
@@ -64,7 +63,7 @@ with tf.Graph().as_default() as graph:  # Set default graph as graph
 
             # Assign input and output tensors
             a_input = graph.get_tensor_by_name('inputA:0')  # Input Tensor
-            a_output = graph.get_tensor_by_name('a2b_generator/output_image:0')  # Output Tensor
+            a_output = graph.get_tensor_by_name('a2b_generator/Conv_7/Relu:0')  # Output Tensor
 
             # Initialize_all_variables
             tf.global_variables_initializer()
@@ -78,11 +77,17 @@ with tf.Graph().as_default() as graph:  # Set default graph as graph
                 
                 # Feed in images to the graph
                 a2b_result = sess.run(a_output, feed_dict={a_input: a_feed})
+                print(type(a2b_result))
+                print(a2b_result.shape)
                 
                 # Create and save the output image
-                a_img_opt = np.concatenate((a_feed, a2b_result), axis=0)
+                a_img_opt = a2b_result
                 img_name = os.path.basename(a_list[i])
-                im.imwrite(im.immerge(a_img_opt, 1, 2), a_save_dir + '/' + img_name)
+
+                output = im.immerge(a_img_opt, 1, 1)
+
+                im.imwriteShow(output, a_save_dir + '/' + img_name)
+
                 print('Save %s' % (a_save_dir + '/' + img_name))
 
                 if i == 100:

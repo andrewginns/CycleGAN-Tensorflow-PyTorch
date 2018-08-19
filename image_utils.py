@@ -43,7 +43,14 @@ def imread(path, mode='RGB'):
 
 def imwrite(image, path):
     # save an [-1.0, 1.0] image
-    return scipy.misc.imsave(path, _to_range(image, 0, 255, np.uint8))
+    return scipy.misc.imsave(path, scipy.misc.toimage(_to_range(image, 0, 255, np.uint8)))
+
+def imwriteShow(image, path):
+    # save an [-1.0, 1.0] image
+    array = scipy.misc.toimage(_to_range(image, 0, 255, np.uint8))
+    # array.resize((800, 480), resample=1)
+    array.show()
+    return scipy.misc.imsave(path, array)
 
 
 def imresize(image, size, interp='bilinear'):
