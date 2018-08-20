@@ -13,7 +13,7 @@ import numpy as np
 
 """ param """
 parser = argparse.ArgumentParser(description='')
-parser.add_argument('--graph', dest='graph_file', default='C:/Users/ag17634/Desktop/optimized-graph.pb',
+parser.add_argument('--graph', dest='graph_file', default='C:/Users/ag17634/Desktop/hybrid-graph.pb',
                     help='path of graph to use')
 parser.add_argument('--dataset', dest='dataset', default='C:/Users/ag17634/Desktop/test',
                     help='path of images to process')
@@ -63,7 +63,7 @@ with tf.Graph().as_default() as graph:  # Set default graph as graph
 
             # Assign input and output tensors
             a_input = graph.get_tensor_by_name('a2b_generator/Conv_7/Relu:0')  # Input Tensor
-            a_output = graph.get_tensor_by_name('a2b_generator/output_image')  # Output Tensor
+            a_output = graph.get_tensor_by_name('a2b_generator/output_image:0')  # Output Tensor
 
             # Initialize_all_variables
             tf.global_variables_initializer()
@@ -72,12 +72,12 @@ with tf.Graph().as_default() as graph:  # Set default graph as graph
             # Inference
             for i in range(len(a_list)):
                 # Define shapes for images fed to the graph
-                inputShape = (150, 150, 256)
-                inputTensor = np.zeros(inputShape)
-                a_feed = inputTensor
+                inputArray = np.zeros([150, 150, 256], dtype=float)
+                #a_feed = tf.constant(inputArray)
+                #a_feed.shape = 1, 150, 150, 256
 
                 # Feed in images to the graph
-                a2b_result = sess.run(a_output, feed_dict={a_input: a_feed})
+                a2b_result = sess.run(a_output, feed_dict={a_input: inputArray})
                 print(type(a2b_result))
                 print(a2b_result.shape)
 
