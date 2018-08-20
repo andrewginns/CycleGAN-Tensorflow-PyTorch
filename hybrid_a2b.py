@@ -9,23 +9,18 @@ import utils
 import tensorflow as tf
 from tensorflow.python.platform import gfile
 import time
-import gzip
-
+import numpy as np
 
 """ param """
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('--graph', dest='graph_file', default='C:/Users/ag17634/Desktop/optimized-graph.pb',
                     help='path of graph to use')
-parser.add_argument('--input', dest='input_node', default='a2b_generator/Conv_7/Relu:0', help='input node')
-parser.add_argument('--output', dest='output_node', default='a2b_generator/output_image:0', help='output node')
 parser.add_argument('--dataset', dest='dataset', default='C:/Users/ag17634/Desktop/test',
                     help='path of images to process')
 parser.add_argument('--crop_size', dest='crop_size', type=int, default=600, help='then crop to this size')
 args = parser.parse_args()
 
 graph_file = args.graph_file
-input_node = args.input_node
-output_node = args.output_node
 dataset = args.dataset
 crop_size = args.crop_size
 
@@ -67,24 +62,25 @@ with tf.Graph().as_default() as graph:  # Set default graph as graph
                 print("Tensor details :", str(op.values()))  # Tensor name
 
             # Assign input and output tensors
-            a_input = graph.get_tensor_by_name(input_node)  # Input Tensor
-            a_output = graph.get_tensor_by_name(output_node)  # Output Tensor
+            a_input = graph.get_tensor_by_name('a2b_generator/Conv_7/Relu:0')  # Input Tensor
+            a_output = graph.get_tensor_by_name('a2b_generator/output_image')  # Output Tensor
 
             # Initialize_all_variables
             tf.global_variables_initializer()
 
             start = time.time()
             # Inference
-
-            # Add data to be fed into the graph
             for i in range(len(a_list)):
                 # Define shapes for images fed to the graph
-                a_feed = im.imresize(im.imread(a_list[i]), [crop_size, crop_size])
-                a_feed.shape = 1, crop_size, crop_size, 3
-                
-                # Feed in data to the graph
+                inputShape = (150, 150, 256)
+                inputTensor = np.zeros(inputShape)
+                a_feed = inputTensor
+
+                # Feed in images to the graph
                 a2b_result = sess.run(a_output, feed_dict={a_input: a_feed})
-                
+                print(type(a2b_result))
+                print(a2b_result.shape)
+
                 # Create and save the output image
                 a_img_opt = a2b_result
                 img_name = os.path.basename(a_list[i])

@@ -63,7 +63,7 @@ with tf.Graph().as_default() as graph:  # Set default graph as graph
 
             # Assign input and output tensors
             a_input = graph.get_tensor_by_name('inputA:0')  # Input Tensor
-            a_output = graph.get_tensor_by_name('a2b_generator/Conv_7/Relu:0')  # Output Tensor
+            a_output = graph.get_tensor_by_name('a2b_generator/output_image:0')  # Output Tensor
 
             # Initialize_all_variables
             tf.global_variables_initializer()
