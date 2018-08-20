@@ -1,31 +1,46 @@
 #!/usr/bin/python           # This is server.py file
 
 import socket               # Import socket module
-import sys
+import struct
 
 s = socket.socket()         # Create a socket object
 host = socket.gethostname() # Get local machine name
 print(host)
+print(socket.gethostbyname(socket.gethostname()))
 port = 7000                # Reserve a port for your service.
 s.bind((host, port))        # Bind to the port
 
 s.listen(5)                 # Now wait for client connection.
 while True:
    c, addr = s.accept()     # Establish connection with client.
-   print 'Got connection from', addr
-   c.send('Thank you for connecting')
+   print('Got connection from', addr)
+   # c.send('Thank you for connecting')
 
-   data = c.recv(4096)
-   print(sys.getsizeof(data))
+   # while True:
+   #     buf = ''
+   #     while len(buf) < 4:
+   #         buf += c.recv(4 - len(buf))
+   #     size = struct.unpack('!i', buf)[0]
+   #     with open('C:/Users/ginns/Desktop/received.gz', 'wb') as f:
+   #         while size > 0:
+   #             data = c.recv(1024)
+   #             f.write(data)
+   #             size -= len(data)
+   #     print('Data Saved')
+   #     c.sendall('Data Received')
+   #     c.close()
 
-   if not data: break
-   c.sendall(data)
-   c.close()                # Close the connection
-
-   with open('C:/Users/ginns/Desktop/received.gz', 'w') as f:
-       f.write(data)
-
-   print("File received")
+   # data = c.recv(4096)
+   # print(sys.getsizeof(data))
+   #
+   # if not data: break
+   # c.sendall(data)
+   # c.close()                # Close the connection
+   #
+   # with open('C:/Users/ginns/Desktop/received.gz', 'w') as f:
+   #     f.write(data)
+   #
+   # print("File received")
 
 # import socket
 # import struct
