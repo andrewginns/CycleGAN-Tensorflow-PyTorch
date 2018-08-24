@@ -34,10 +34,11 @@ def freeze_graph(model_folder, output_nodes='a2b_generator/output_image',
                 _out = tf.identity(graph.get_tensor_by_name(o+':0'), name=n)
             onames=nnames
 
-    input_graph_def = graph.as_graph_def()
+    input_graph_def = graph.as_graph_def(add_shapes=True)
 
     # fix batch norm nodes
     for node in input_graph_def.node:
+        # print(node)
         if node.op == 'RefSwitch':
             node.op = 'Switch'
             for index in xrange(len(node.input)):
@@ -45,19 +46,24 @@ def freeze_graph(model_folder, output_nodes='a2b_generator/output_image',
                     node.input[index] = node.input[index] + '/read'
         elif node.op == 'AssignSub':
             node.op = 'Sub'
-            if 'use_locking' in node.attr: del node.attr['use_locking']
+            if 'use_locking' in node.attr: del node.attr['use_locking']    
+
 
     with tf.Session(graph=graph) as sess:
         saver.restore(sess, input_checkpoint)
+        #for node in output_graph_def.node:
+        #   print(node)
 
-        # In production, graph weights no longer need to be updated
-        # graph_util provides utility to change all variables to constants
-        output_graph_def = graph_util.convert_variables_to_constants(
-            sess, input_graph_def, 
-            onames # unrelated nodes will be discarded
-        ) 
+        # Extract subgraph like https://stackoverflow.com/questions/49268505/how-to-reuse-a-frozen-previously-learned-subgraph-in-new-computation-graphs
+        # Convert variable ops to constant ops, define the output node
+        output_graph_def = tf.graph_util.convert_variables_to_constants(sess, input_graph_def, onames)
+        
+        # Extract a subgraph to a destination node
+        # output_graph_def = tf.graph_util.extract_sub_graph(output_graph_def, onames)
+        
+        # Prune nodes not required for inference
+        # output_graph_def = tf.graph_util.remove_training_nodes(output_graph_def, protected_nodes=None)
 
-        # Serialize and write to file
         with tf.gfile.GFile(output_graph, "wb") as f:
             f.write(output_graph_def.SerializeToString())
         print("%d ops in the final graph." % len(output_graph_def.node))
