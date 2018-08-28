@@ -10,6 +10,7 @@ import tensorflow as tf
 from tensorflow.python.platform import gfile
 import time
 import numpy as np
+import pickle
 
 """ param """
 parser = argparse.ArgumentParser(description='')
@@ -72,7 +73,9 @@ with tf.Graph().as_default() as graph:  # Set default graph as graph
             # Inference
             for i in range(len(a_list)):
                 # Define shapes for images fed to the graph
-                inputArray = np.zeros([150, 150, 256], dtype=float)
+                print("\nUnpickling\n")
+                inputArray = pickle.load( open("C:/Users/ag17634/Desktop/save.p", "wb"))
+                print(inputArray.shape)
                 #a_feed = tf.constant(inputArray)
                 #a_feed.shape = 1, 150, 150, 256
 

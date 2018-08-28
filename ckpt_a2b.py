@@ -13,9 +13,9 @@ import time
 
 """ param """
 parser = argparse.ArgumentParser(description='')
-parser.add_argument('--checkpoints', dest='checkpoints', default='./outputs/checkpoints/summer2winter_yosemite',
+parser.add_argument('--checkpoints', dest='checkpoints', default='C:/Users/ag17634/Documents/GitHub/CycleGAN-Tensorflow-PyTorch/outputs/checkpoints/norm2pro',
                     help='path of model checkpoint files')
-parser.add_argument('--dataset', dest='dataset', default='./datasets/summer2winter_yosemite/testA',
+parser.add_argument('--dataset', dest='dataset', default='C:/Users/ag17634/Desktop/test',
                     help='path of images to process')
 parser.add_argument('--crop_size', dest='crop_size', type=int, default=256, help='then crop to this size')
 args = parser.parse_args()
@@ -46,6 +46,21 @@ with tf.Session() as sess:
         ckpt_path = utils.load_checkpoint(checkpoints, sess)
     except IOError as e:
         raise Exception('No checkpoint found!')
+
+    # Count parameters
+    total_parameters = 0
+    for variable in tf.trainable_variables():
+        # shape is an array of tf.Dimension
+        shape = variable.get_shape()
+        print(shape)
+        print(len(shape))
+        variable_parameters = 1
+        for dim in shape:
+            print(dim)
+            variable_parameters *= dim.value
+        print(variable_parameters)
+        total_parameters += variable_parameters
+    print("\nTotal parameters:\n", total_parameters)
 
     start = time.time()
     # Inference

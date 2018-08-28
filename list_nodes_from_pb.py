@@ -4,6 +4,7 @@ import os
 import sys
 from typing import Iterable
 import tensorflow as tf
+from numpy import sum, prod
 
 # Modified from https://gist.github.com/sunsided/88d24bf44068fe0fe5b88f09a1bee92a #
 
@@ -17,6 +18,7 @@ if not os.path.exists(args.file):
 
 graph_def = None
 graph = None
+count = 0
 
 print('Loading graph definition ...', file=sys.stderr)
 try:
@@ -38,6 +40,7 @@ try:
             op_dict=None,
             producer_op_list=None
         )
+
 except BaseException as e:
     parser.exit(2, 'Error importing the graph: {}'.format(str(e)))
 
@@ -47,6 +50,7 @@ assert graph is not None
 ops = graph.get_operations()  # type: Iterable[tf.Operation]
 for op in ops:
     print('- {0:20s} "{1}" ({2} outputs)'.format(op.type, op.name, len(op.outputs)))
+    count+=1
 
 print()
 print('Sources (operations without inputs):')
@@ -54,6 +58,7 @@ for op in ops:
     if len(op.inputs) > 0:
         continue
     print('- {0}'.format(op.name))
+    # count+=1
 
 print()
 print('Operation inputs:')
@@ -68,3 +73,8 @@ print('Tensors:')
 for op in ops:
     for out in op.outputs:
         print('- {0:20} {1:10} "{2}"'.format(str(out.shape), out.dtype.name, out.name))
+        # count += 1
+
+print("\nFilesize = " + str((os.path.getsize(args.file))/1000000) + " MB")
+
+print(count)

@@ -9,6 +9,7 @@ import utils
 import tensorflow as tf
 from tensorflow.python.platform import gfile
 import time
+import pickle
 
 
 """ param """
@@ -79,15 +80,17 @@ with tf.Graph().as_default() as graph:  # Set default graph as graph
                 a2b_result = sess.run(a_output, feed_dict={a_input: a_feed})
                 print(type(a2b_result))
                 print(a2b_result.shape)
+
+                # pickle.dump(a2b_result, open("C:/Users/ag17634/Desktop/save.p", "wb"))
                 
-                # Create and save the output image
+               # Create and save the output image
                 a_img_opt = a2b_result
                 img_name = os.path.basename(a_list[i])
-
+               
                 output = im.immerge(a_img_opt, 1, 1)
-
-                im.imwriteShow(output, a_save_dir + '/' + img_name)
-
+               
+                im.imwrite(output, a_save_dir + '/' + img_name)
+               
                 print('Save %s' % (a_save_dir + '/' + img_name))
 
                 if i == 100:
