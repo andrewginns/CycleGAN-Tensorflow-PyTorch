@@ -13,11 +13,11 @@ import time
 
 """ param """
 parser = argparse.ArgumentParser(description='')
-parser.add_argument('--checkpoints', dest='checkpoints', default='C:/Users/ag17634/Documents/GitHub/CycleGAN-Tensorflow-PyTorch/outputs/checkpoints/norm2pro',
+parser.add_argument('--checkpoints', dest='checkpoints', default='C:/Users/ginns/Desktop/CycleGAN-Tensorflow-PyTorch/outputs/checkpoints/norm2pro_256',
                     help='path of model checkpoint files')
-parser.add_argument('--dataset', dest='dataset', default='C:/Users/ag17634/Desktop/test',
+parser.add_argument('--dataset', dest='dataset', default='C:/Users/ginns/Desktop/test',
                     help='path of images to process')
-parser.add_argument('--crop_size', dest='crop_size', type=int, default=256, help='then crop to this size')
+parser.add_argument('--crop_size', dest='crop_size', type=int, default=600, help='then crop to this size')
 args = parser.parse_args()
 
 checkpoints = args.checkpoints
@@ -40,6 +40,9 @@ with tf.Session() as sess:
 
     # Define the graph
     a2b = models.generator(a_input, 'a2b')
+    b2a = models.generator(a_input, 'b2a')
+
+
 
     # Restore weights
     try:
@@ -62,7 +65,7 @@ with tf.Session() as sess:
         total_parameters += variable_parameters
     print("\nTotal parameters:\n", total_parameters)
 
-    start = time.time()
+    # start = time.time()
     # Inference
     for i in range(len(a_list)):
         # Define shapes for images fed to the graph
@@ -78,8 +81,8 @@ with tf.Session() as sess:
         im.imwrite(im.immerge(a_img_opt, 1, 2), a_save_dir + '/' + img_name)
         print('Save %s' % (a_save_dir + '/' + img_name))
 
-        if i == 100:
-            end = time.time()
-    end2 = time.time()
-    print("Time to process first 100 images:", end - start)
-    print("Time to process all %d images: %f" % (i + 1, end2 - start))
+    #     if i == 100:
+    #         end = time.time()
+    # end2 = time.time()
+    # print("Time to process first 100 images:", end - start)
+    # print("Time to process all %d images: %f" % (i + 1, end2 - start))

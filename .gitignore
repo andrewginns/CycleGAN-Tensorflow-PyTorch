@@ -2748,3 +2748,4 @@ download_dataset.sh
 *.meta
 *.data-00000-of-00001
 outputs/checkpoints/summer2winter_yosemite/checkpoint
+*.pyc

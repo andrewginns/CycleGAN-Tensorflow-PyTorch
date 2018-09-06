@@ -33,7 +33,7 @@ with tf.Graph().as_default() as graph1:  # Set default graph as graph
 
     with tf.Session() as sess:
 
-        # Parse the protobuff file to obtain an unserialized graph_drf
+        # Parse the protobuff file to obtain an unserialized GraphDef
         with gfile.FastGFile(graph_file1, 'rb') as f:
 
             print("\nLoading Images...\n")
@@ -49,7 +49,7 @@ with tf.Graph().as_default() as graph1:  # Set default graph as graph
             graph_def.ParseFromString(f.read())
             sess.graph.as_default()
 
-            # Import the graph_def as the current default graph
+            # Import the GraphDef as the current default graph
             tf.import_graph_def(
                 graph_def,
                 input_map=None,
