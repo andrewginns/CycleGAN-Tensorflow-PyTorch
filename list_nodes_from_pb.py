@@ -75,6 +75,5 @@ for op in ops:
         print('- {0:20} {1:10} "{2}"'.format(str(out.shape), out.dtype.name, out.name))
         # count += 1
 
-print("\nFilesize = " + str((os.path.getsize(args.file))/1000000) + " MB")
-
-print(count)
+#print("\nFilesize = " + str((os.path.getsize(args.file))/1000000) + " MB")
+#print(count)
