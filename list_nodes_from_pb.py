@@ -4,7 +4,6 @@ import os
 import sys
 from typing import Iterable
 import tensorflow as tf
-from numpy import sum, prod
 
 # Modified from https://gist.github.com/sunsided/88d24bf44068fe0fe5b88f09a1bee92a #
 
@@ -43,6 +42,12 @@ try:
 
 except BaseException as e:
     parser.exit(2, 'Error importing the graph: {}'.format(str(e)))
+
+# List TensorProto object from a NodeDef representing a Const
+# input_graph_def = graph.as_graph_def(add_shapes=True)
+# for node in input_graph_def.node:
+#     # print(node)
+#     print(node.attr['value'].tensor)
 
 print()
 print('Operations:')
