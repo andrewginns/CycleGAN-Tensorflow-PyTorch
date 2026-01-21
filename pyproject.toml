@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cyclegan-torch"
+version = "0.1.0"
+description = "Modern PyTorch CycleGAN port (from legacy TF1 repo)"
+requires-python = ">=3.10"
+dependencies = [
+  # NOTE: `torch` + `torchvision` are intentionally NOT in default deps.
+  # Users should install the appropriate wheels for their hardware.
+  "tensorboard>=2.14",
+  "pillow>=10",
+  "tqdm>=4.66",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Install ONE of these extras depending on hardware.
+# See `docs/install.md`.
+cpu = ["torch", "torchvision"]
+mps = ["torch", "torchvision"]
+# For CUDA we still depend on the same package names; the wheel source/index changes.
+cuda = ["torch", "torchvision"]
+
+[project.scripts]
+cyclegan-train = "cyclegan_torch.scripts.train:main"
+cyclegan-infer = "cyclegan_torch.scripts.infer:main"
+
+[tool.setuptools]
+# Flat-layout repo; only package `cyclegan_torch`.
+packages = ["cyclegan_torch", "cyclegan_torch.scripts"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

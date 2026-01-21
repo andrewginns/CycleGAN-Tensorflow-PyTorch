@@ -2749,3 +2749,17 @@ download_dataset.sh
 *.data-00000-of-00001
 outputs/checkpoints/summer2winter_yosemite/checkpoint
 *.pyc
+
+# Local environments
+.venv/
+.venv_cpu/
+.venv_tf/
+
+# Python build artifacts
+*.egg-info/
+
+# Local outputs / run artifacts
+outputs*/
+
+# Caches
+__pycache__/

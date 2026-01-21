@@ -1,0 +1,23 @@
+services:
+  cyclegan:
+    build: .
+    image: cyclegan-torch:local
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/.venv
+    environment:
+      - PYTHONUNBUFFERED=1
+    tty: true
+    command: sleep infinity
+
+  cyclegan_legacy:
+    build:
+      context: .
+      dockerfile: Dockerfile.legacy
+    image: cyclegan-tf1legacy:local
+    working_dir: /app
+    volumes:
+      - .:/app
+    tty: true
+    command: sleep infinity

@@ -1,0 +1,22 @@
+# Minimal config matching legacy defaults
+
+dataset: horse2zebra
+data_root: datasets
+
+load_size: 286
+crop_size: 256
+
+epochs: 200
+batch_size: 1
+lr: 0.0002
+
+# DataLoader
+num_workers: 2
+
+# Logging/output
+logdir: outputs_torch
+sample_every: 100
+save_every: 1000
+
+# Match legacy TF per-image normalization? Default false (more standard).
+legacy_minmax_norm: false
